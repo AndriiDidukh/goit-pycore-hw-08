@@ -77,6 +77,19 @@ class AddressBookService:
 
     @staticmethod
     @input_error
+    def add_email_to_contact(args, book: AddressBook):
+        name, email_address, *_ = args
+        record = book.find(name)
+        if not record:
+            return "No contact for such name"
+        try:
+            record.add_email(email_address)
+            return "Email added"
+        except ValueError:
+            return "Invalid email address"
+
+    @staticmethod
+    @input_error
     def get_birthday_for_contact(args, book: AddressBook):
         name, *_ = args
         record = book.find(name)
@@ -94,7 +107,7 @@ class AddressBookService:
         for record in book.data.values():
             name = record.name.value
             birthday_str = record.birthday
-            birthday = datetime.strptime(birthday_str, '%d.%m.%Y').date()
+            birthday = datetime.strptime(birthday_str, "%d.%m.%Y").date()
 
             birthday_this_year = birthday.replace(year=today.year)
 
@@ -103,12 +116,16 @@ class AddressBookService:
 
             if today <= birthday_this_year <= end_date:
                 if birthday_this_year.weekday() in (5, 6):
-                    birthday_this_year += timedelta(days=(7 - birthday_this_year.weekday()))
+                    birthday_this_year += timedelta(
+                        days=(7 - birthday_this_year.weekday())
+                    )
 
-                upcoming_birthdays.append({
-                    'name': name,
-                    'congratulation_date': birthday_this_year.strftime('%d.%m.%Y')
-                })
+                upcoming_birthdays.append(
+                    {
+                        "name": name,
+                        "congratulation_date": birthday_this_year.strftime("%d.%m.%Y"),
+                    }
+                )
 
         return upcoming_birthdays
 

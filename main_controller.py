@@ -37,6 +37,9 @@ def main():
         elif command == "add-birthday":
             print(AddressBookService.add_birthday_to_contact(args, book))
 
+        elif command == "add-email":
+            print(AddressBookService.add_email_to_contact(args, book))
+
         elif command == "show-birthday":
             print(AddressBookService.get_birthday_for_contact(args, book))
 
